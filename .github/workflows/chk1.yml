@@ -11,21 +11,14 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
-      
-      - name: Pip Cache
-        id: pip_cache
-        uses: actions/cache@v3
+      - uses: actions/setup-python@v4
         with:
-          path: ~/.cache/pip
-          key: pip-${{ hashFiles('requirements.txt') }}
-          restore-keys: pip-
-
-      - name: Install requirements
-        if: steps.pip_cache.outputs.cache-hit != 'true'
-        run: pip3 install -r requirements.txt
+          python-version: '3.10'
+          cache: 'pip'
+      - run: pip install -r requirements.txt
 
       - name: Run chk
-        run: python3 main.py --cookie_string "${{ secrets.GLADOS_COOKIE }}"
+        run: python main.py --cookie_string "${{ secrets.GLADOS_COOKIE }}"
         env: 
           PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
           SERVERCHAN_SENDKEY: ${{ secrets.SERVERCHAN_SENDKEY }}
